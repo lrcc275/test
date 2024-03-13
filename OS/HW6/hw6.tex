@@ -1,0 +1,119 @@
+\documentclass[11pt]{article}
+\usepackage{amssymb}
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{units}
+\usepackage{pifont}
+\geometry{
+	a4paper,
+	total={150mm,237mm},
+	left=30mm,
+	top=27mm,
+	}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{indentfirst}
+\usepackage[graphicx]{realboxes}
+\usepackage{booktabs}
+\usepackage{cases}
+\usepackage{subfig}  
+\usepackage{float}
+\usepackage{pythonhighlight}
+
+\setlength{\parindent}{2em}
+\title{HW5}
+\author{姓名:陈锐林,学号:21307130148}
+
+\begin{document}
+\maketitle
+\begin{large}
+	\noindent Question1\\
+\end{large}
+\hspace*{2em}(1)已知基址为1000，空间大小为100，头部大小为0，根据题目的要求，进行一系列的malloc和free后，结果如下表：\\
+\begin{tabular}{p{2cm}p{2cm}p{11cm}}  % 其中，tabular是表格内容的环境；c表示centering，即文本格式居中；c的个数代表列的个数
+    \toprule[2pt]
+    操作 & 返回 & 内存 \\ %中间用 & 隔开, 换行用\\
+    \midrule[2pt]
+    Alloc(3)    & 1000      & (1003,97)      \\
+    free        & 0 & (1000,3),(1003,97) \\
+    Alloc(5)    & 1003 & (1000,3),(1008,92) \\
+    free        & 0 & (1000,3),(1003,5),(1008,92) \\
+    Alloc(8)    & 1008 & (1000,3),(1003,5),(1016,84) \\
+    free        & 0 & (1000,3),(1003,5),(1008,8),(1016,84) \\
+    Alloc(8)    & 1008 & (1000,3),(1003,5),(1016,84) \\
+    free        & 0 & (1000,3),(1003,5),(1008,8),(1016,84) \\
+    Alloc(2)    & 1000 & (1002,1),(1003,5),(1008,8),(1016,84) \\
+    Alloc(7)    & 1008 & (1002,1),(1003,5),(1015,1),(1016,84) \\
+    \bottomrule[2pt]
+\end{tabular}
+\hspace*{2em}可以注意到最后free list被分成越来越多的小块；并且不可逆。\\
+\begin{large}
+	\noindent Question2\\
+\end{large}
+\hspace*{2em}(1)如果换成WORST策略，结果如下表：\\
+\begin{tabular}{p{2cm}p{2cm}p{11cm}}  % 其中，tabular是表格内容的环境；c表示centering，即文本格式居中；c的个数代表列的个数
+    \toprule[2pt]
+    操作 & 返回 & 内存 \\ %中间用 & 隔开, 换行用\\
+    \midrule[2pt]
+    Alloc(3)    & 1000      & (1003,97)      \\
+    free        & 0 & (1000,3),(1003,97) \\
+    Alloc(5)    & 1003 & (1000,3),(1008,92) \\
+    free        & 0 & (1000,3),(1003,5),(1008,92) \\
+    Alloc(8)    & 1008 & (1000,3),(1003,5),(1016,84) \\
+    free        & 0 & (1000,3),(1003,5),(1008,8),(1016,84) \\
+    Alloc(8)    & 1016 & (1000,3),(1003,5),(1008,8),(1024,76)\\
+    free        & 0 & (1000,3),(1003,5),(1008,8),(1016,8),(1024,76) \\
+    Alloc(2)    & 1024 & (1000,3),(1003,5),(1008,8),(1016,8),(1026,74) \\
+    Alloc(7)    & 1026 & (1000,3),(1003,5),(1008,8),(1016,8),(1033,67)  \\
+    \bottomrule[2pt]
+\end{tabular}
+\hspace*{2em}同样的free list被分成越来越多的小块，且不可逆；且因为WORST策略导致前面的小块不再被使用到，最后剩的块数也多起来了。\\
+
+\begin{large}
+	\noindent Question3\\
+\end{large}
+\hspace*{2em}如果用FIRST策略，因为选择最小的合适块即可，所以会减少搜索次数；这加速了查找。结果如下：\\
+\begin{tabular}{p{2cm}p{2cm}p{11cm}}  % 其中，tabular是表格内容的环境；c表示centering，即文本格式居中；c的个数代表列的个数
+    \toprule[2pt]
+    操作 & 返回 & 内存 \\ %中间用 & 隔开, 换行用\\
+    \midrule[2pt]
+    Alloc(3)    & 1000      & (1003,97)      \\
+    free        & 0 & (1000,3),(1003,97) \\
+    Alloc(5)    & 1003 & (1000,3),(1008,92) \\
+    free        & 0 & (1000,3),(1003,5),(1008,92) \\
+    Alloc(8)    & 1008 & (1000,3),(1003,5),(1016,84) \\
+    free        & 0 & (1000,3),(1003,5),(1008,8),(1016,84) \\
+    Alloc(8)    & 1008 & (1000,3),(1003,5),(1016,84) \\
+    free        & 0 & (1000,3),(1003,5),(1008,8),(1016,84) \\
+    Alloc(2)    & 1000 & (1002,1),(1003,5),(1008,8),(1016,84) \\
+    Alloc(7)    & 1008 & (1002,1),(1003,5),(1015,1),(1016,84) \\
+    \bottomrule[2pt]
+\end{tabular}\\
+
+\begin{large}
+	\noindent Question4\\
+\end{large}
+\hspace*{2em}(1)FIRST策略是选择找到的第一个足够大的空间，所以很难去判断会怎样受到排序策略的影响。能确定的是SIZESORT-下是最快的，因为第一块应是最能满足的；其余排序则要考虑所需块的大小。(2)BEST策略在SIZESORT+下表现最好，因为这样遍历过去，第一个满足空间大小的就是所求。但是因为BEST是找满足大小的最小块，所以实际需要的时间会因为具体的free list和所需大小而浮动。只是SIZESORT+是最顺的。(3)WORST在SIZESORT-下最好，第一个一定就是满足要求的(或者再也找不到了)。(4)如果要考虑合并的话ADDSORT可能会是一个好策略。\\
+
+\begin{large}
+	\noindent Question5\\
+\end{large}
+\hspace*{2em}(1)较大的分配需求可能会失败，因为不合并的话最后free list是支离破碎的小块。(2)在有-C标志的情况下，相邻的空闲块得到合并；能应付（不合并时无法应付的）较大的分配需求。
+(3)沿用前面的命令，只修改-n(FIRST策略)。在允许合并时，每行的free list都很简洁；最后剩下一块90的大小；不允许合并时，中间出现了分配失败的情况；最后free list冗长且每块很小，最后大小是不到90的。
+(4)这时，列表的顺序只有当采用FIRST策略时才会对free list有影响。其他策略不受影响。\\
+
+\begin{large}
+	\noindent Question6\\
+\end{large}
+\hspace*{2em}当改变 -P 时，高于50，说明分配操作要比释放多；接近100，意味着几乎所有操作都是分配操作；接近0时，仍近乎是一半分配一半释放，因为只有分配了才能释放。\\
+
+\begin{large}
+	\noindent Question7\\
+\end{large}
+\hspace*{2em}(1)指令：python3 ./malloc.py -c -A +10,+15,+20,+25,+30,-0,-1,-2,-3,-4; 最后free list为：[ addr:1000 sz:10 ][ addr:1010 sz:15 ][ addr:1025 sz:20 ][ addr:1045 sz:25 ][ addr:1070 sz:30 ]。
+\par(2)指令：python3 ./malloc.py -c -A +10,+15,+20,+25,+30,-0,-1,-2,-3,-4 -l SIZESORT+ -C; 最后free list为：[ addr:1025 sz:20 ][ addr:1000 sz:25 ][ addr:1045 sz:55 ]。
+\par(3)指令：python3 ./malloc.py -c -A +10,+15,+20,+25,+30,-0,-1,-2,-3,-4 -l SIZESORT- -C; 最后free list为：[ addr:1070 sz:30 ][ addr:1045 sz:25 ][ addr:1025 sz:20 ][ addr:1010 sz:15 ][ addr:1000 sz:10 ]。\\
+\end{document}
